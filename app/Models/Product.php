@@ -20,12 +20,11 @@ class Product extends Model
 
     public function search(string $search, array $range)
     {
-        // return self::query()->where("title", "like", "%$search%")->orWhere("description", "like", "%$search%")->orWhere("id", "like", "%$search%");
         $query = self::query();
+        $query->where("title", "like", "%$search%")->orWhere("description", "like", "%$search%")->orWhere("id", "like", "%$search%");
         if ($range["range"] and $range["range_from"] !== false and $range["range_to"] !== false) {
             $query->whereBetween($range["range"], [$range["range_from"], $range["range_to"]]);
         }
-        $query->where("title", "like", "%$search%");
         return $query;
     }
 }

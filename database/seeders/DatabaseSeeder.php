@@ -21,10 +21,17 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Role::create([
+            "name" => "owner"
+        ]);
+
+        Role::create([
             "name" => "admin"
         ]);
 
-        Role::factory(3)->create();
+        Role::create([
+            "name" => "member"
+        ]);
+
         \App\Models\User::factory(10)->create();
         Category::factory(10)->create();
         Product::factory(100)->create();

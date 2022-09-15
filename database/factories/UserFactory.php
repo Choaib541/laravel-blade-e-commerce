@@ -18,8 +18,7 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            "role_id" => $this->faker->numberBetween(1, 3),
-            "picture" => "placeholders/avatar.png",
+            "role_id" => $this->faker->numberBetween(2, 3),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),

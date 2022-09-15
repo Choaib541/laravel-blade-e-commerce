@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -13,6 +14,10 @@ class Controller extends BaseController
 
     public function index()
     {
+        $rand_categories = Category::inRandomOrder()->take(3)->get();
+        $categories = Category::take(12)->get();
+        // dd($categories);
+
         return view("public.index");
     }
 
