@@ -45,20 +45,26 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function search(string $search, array $range)
-    {
-        $query = self::query();
-        $query->with("role")->whereHas("role", function (Builder $query) use ($search) {
-            $query->where("name", "like", "%$search%");
-        })->orWhere("name", "like", "%$search%")->orWhere("email", "like", "%$search%")->orWhere("id", "like", "%$search%");
-        if ($range["range"] and $range["range_from"] !== false and $range["range_to"] !== false) {
-            $query->whereBetween($range["range"], [$range["range_from"], $range["range_to"]]);
-        }
-        return $query;
-    }
-
     public function role()
     {
         return $this->hasOne(Role::class, "id", "role_id");
+    }
+
+
+    public function scopeSearch($query, string $search)
+    {
+        return $query->whereHas("role", function (Builder $query) use ($search) {
+            $query->where("name", "like", "%$search%");
+        })->Where("name", "like", "%$search%")->orWhere("id", "like", "%$search%")->orWhere("email", "like", "%$search%");
+    }
+
+    public function scopeSort($query, string $sort, string $direc)
+    {
+        return $query->orderBy($sort, $direc);
+    }
+
+    public function scopeRange($query, $range, $from, $to)
+    {
+        return $query->whereBetween($range, [$from, $to]);
     }
 }

@@ -17,26 +17,26 @@ class ProductController extends Controller
     public function index()
     {
 
-        $products = new Product();
-        $sort = request()->sort ?? "id";
-        $desc = request()->desc ?? "";
-        $search = request()->search ?? "";
-        $range = request()->range ?? false;
-        $range_from = request()->range_from ?? false;
-        $range_to = request()->range_to ?? false;
-
-        $products = $products->search($search, [
-            "range" => $range,
-            "range_from" => $range_from,
-            "range_to" => $range_to,
+        $validated = request()->validate([
+            "search" => ["nullable"],
+            "sort" => ["nullable", "in:id,title,price,created_at,stock,updated_at,in_stock"],
+            "direc" => ["nullable", "in:asc,desc"],
+            "range_option" => ["nullable", "in:price,stock,id,created_at,updated_at"],
+            "range_from" => ["nullable"],
+            "range_to" => ["nullable"],
         ]);
 
-        $products = $products->orderBy($sort,  $desc === "true" ? "desc" : "asc");
+        $products = new Product();
 
-        $products = $products->paginate(8);
+        $products = $products->search($validated["search"] ?? "");
 
+        if (isset($validated["range_option"]) && isset($validated["range_from"]) && isset($validated["range_to"])) {
+            $products = $products->range($validated["range_option"], $validated["range_from"], $validated["range_to"]);
+        }
 
-        return view("dashboard.products.index", ["products" => $products, "sort" => $sort]);
+        $products = $products->sort($validated["sort"] ?? "id", $validated["direc"] ?? "desc");
+
+        return view("dashboard.products.index", ["products" => $products->paginate(8)]);
     }
 
     /**

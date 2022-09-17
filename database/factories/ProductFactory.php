@@ -18,7 +18,7 @@ class ProductFactory extends Factory
     {
         return [
             "title" => $this->faker->name(),
-            "image" => "site_images/product.jpg",
+            "image" => "products_image/product.jpg",
             "description" => $this->faker->paragraph(),
             "price" => $this->faker->numberBetween(0, 1000),
             "in_stock" => $this->faker->numberBetween(0, 1),

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,13 +19,25 @@ class Product extends Model
         "stock"
     ];
 
-    public function search(string $search, array $range)
+    public function categories()
     {
-        $query = self::query();
-        $query->where("title", "like", "%$search%")->orWhere("description", "like", "%$search%")->orWhere("id", "like", "%$search%");
-        if ($range["range"] and $range["range_from"] !== false and $range["range_to"] !== false) {
-            $query->whereBetween($range["range"], [$range["range_from"], $range["range_to"]]);
-        }
-        return $query;
+        return $this->belongsToMany(Category::class, "category_products", "product_id", "category_id");
+    }
+
+    public function scopeSearch($query, string $search)
+    {
+        return $query->whereHas("categories", function (Builder $query) use ($search) {
+            $query->where("name", "like", "%$search%");
+        })->orWhere("title", "like", "%$search%")->orWhere("price", "like", "%$search%")->orWhere("description", "like", "%$search%");
+    }
+
+    public function scopeSort($query, string $sort, string $direc)
+    {
+        return $query->orderBy($sort, $direc);
+    }
+
+    public function scopeRange($query, $range, $from, $to)
+    {
+        return $query->whereBetween($range, [$from, $to]);
     }
 }

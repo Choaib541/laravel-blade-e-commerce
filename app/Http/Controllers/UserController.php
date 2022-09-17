@@ -17,31 +17,31 @@ class UserController extends Controller
     public function index()
     {
 
-        $users = new User();
-        $sort = request()->sort ?? "id";
-        $desc = request()->desc ?? false;
-        $search = request()->search ?? "";
-        $range = request()->range ?? false;
-        $range_from = request()->range_from ?? false;
-        $range_to = request()->range_to ?? false;
-
-        $users = $users->search($search, [
-            "range" => $range,
-            "range_from" => $range_from,
-            "range_to" => $range_to,
+        $validated = request()->validate([
+            "search" => ["nullable"],
+            "sort" => ["nullable", "in:id,name,email,role,updated_at,created_at"],
+            "direc" => ["nullable", "in:asc,desc"],
+            "range_option" => ["nullable", "in:created_at,updated_at"],
+            "range_from" => ["nullable"],
+            "range_to" => ["nullable"],
         ]);
 
-        if ($desc !== false) {
-            $users = $users->orderBy($sort,  $desc === "true" ? "desc" : "asc");
-        } else {
-            $users = $users->orderBy("id", "desc");
+        $users = new User();
+
+        $users = $users->search($validated["search"] ?? "");
+
+        if (isset($validated["range_option"]) && isset($validated["range_from"]) && isset($validated["range_to"])) {
+            $users = $users->range($validated["range_option"], $validated["range_from"], $validated["range_to"]);
         }
+
+        $users = $users->sort($validated["sort"] ?? "id", $validated["direc"] ?? "desc");
+
 
         $users = $users->paginate(8);
 
         // ------------
 
-        return view("dashboard.users.index", ["users" => $users, "sort" => $sort]);
+        return view("dashboard.users.index", ["users" => $users]);
     }
 
     /**

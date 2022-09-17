@@ -27,10 +27,10 @@
                         </select>
                     </div>
                     <div>
-                        <select class="custom-select rounded-0" name="desc" id="inputGroupSelect01">
-                            <option value="false" {{ ($_GET['desc'] ?? '') === 'false' ? 'selected' : '' }}>Ascending
+                        <select class="custom-select rounded-0" name="direc" id="inputGroupSelect01">
+                            <option value="desc" {{ ($_GET['direc'] ?? '') === 'desc' ? 'selected' : '' }}>Descending
                             </option>
-                            <option value="true" {{ ($_GET['desc'] ?? '') === 'true' ? 'selected' : '' }}>Descending
+                            <option value="asc" {{ ($_GET['desc'] ?? '') === 'asc' ? 'selected' : '' }}>Ascending
                             </option>
                         </select>
                     </div>
@@ -40,7 +40,7 @@
 
                 </div>
                 <div class="d-flex align-items-center input-group">
-                    <select name="range" id="range-select" class="form-control">
+                    <select name="range" id="range_option" class="form-control">
                         <option {{ ($_GET['range'] ?? false) === 'created_at' ? 'selected' : '' }} value="created_at">
                             Created At</option>
                         <option {{ ($_GET['range'] ?? false) === 'updated_at' ? 'selected' : '' }} value="updated_at">
@@ -59,13 +59,18 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th class="{{ $sort === 'id' ? 'bg-primary text-white' : '' }}">#</th>
-                            <th class="{{ $sort === 'price' ? 'bg-primary text-white' : '' }}">Picture</th>
-                            <th class="{{ $sort === 'name' ? 'bg-primary text-white' : '' }}">Name</th>
-                            <th class="{{ $sort === 'email' ? 'bg-primary text-white' : '' }}">Email</th>
-                            <th class="{{ $sort === 'role_id' ? 'bg-primary text-white' : '' }}">Role</th>
-                            <th class="{{ $sort === 'created_at' ? 'bg-primary text-white' : '' }}">Created at</th>
-                            <th class="{{ $sort === 'updated_at' ? 'bg-primary text-white' : '' }}">Updated at</th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'id' ? 'bg-primary text-white' : '' }}">#</th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'price' ? 'bg-primary text-white' : '' }}">Picture
+                            </th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'name' ? 'bg-primary text-white' : '' }}">Name</th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'email' ? 'bg-primary text-white' : '' }}">Email
+                            </th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'role_id' ? 'bg-primary text-white' : '' }}">Role
+                            </th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'created_at' ? 'bg-primary text-white' : '' }}">
+                                Created at</th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'updated_at' ? 'bg-primary text-white' : '' }}">
+                                Updated at</th>
                             <th>Options</th>
                         </tr>
                     </thead>

@@ -28,10 +28,10 @@
                         </select>
                     </div>
                     <div>
-                        <select class="custom-select rounded-0" name="desc" id="inputGroupSelect01">
-                            <option value="false" {{ ($_GET['desc'] ?? '') === 'false' ? 'selected' : '' }}>Ascending
+                        <select class="custom-select rounded-0" name="direc" id="inputGroupSelect01">
+                            <option value="desc" {{ ($_GET['direc'] ?? '') === 'desc' ? 'selected' : '' }}>Descending
                             </option>
-                            <option value="true" {{ ($_GET['desc'] ?? '') === 'true' ? 'selected' : '' }}>Descending
+                            <option value="asc" {{ ($_GET['direc'] ?? '') === 'asc' ? 'selected' : '' }}>Ascending
                             </option>
                         </select>
                     </div>
@@ -41,7 +41,7 @@
 
                 </div>
                 <div class="d-flex align-items-center input-group">
-                    <select name="range" id="range-select" class="form-control">
+                    <select name="range_option" id="range-select" class="form-control">
                         <option {{ ($_GET['range'] ?? false) === 'id' ? 'selected' : '' }} value="id">Id</option>
                         <option {{ ($_GET['range'] ?? false) === 'price' ? 'selected' : '' }} value="price">Price</option>
                         <option {{ ($_GET['range'] ?? false) === 'stock' ? 'selected' : '' }} value="stock">Stock</option>
@@ -58,20 +58,44 @@
                         type="number" placeholder="To" id="to">
 
                 </div>
+                @error('sort')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+                @error('search')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+                @error('direc')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+                @error('range_option')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+                @error('range_from')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+                @error('range_to')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
             </form>
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th class="{{ $sort === 'id' ? 'bg-primary text-white' : '' }}">Id</th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'id' ? 'bg-primary text-white' : '' }}">Id</th>
                             <th>Image</th>
-                            <th class="{{ $sort === 'title' ? 'bg-primary text-white' : '' }}">Title</th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'title' ? 'bg-primary text-white' : '' }}">Title
+                            </th>
                             <th>Description</th>
-                            <th class="{{ $sort === 'price' ? 'bg-primary text-white' : '' }}">Price</th>
-                            <th class="{{ $sort === 'in_stock' ? 'bg-primary text-white' : '' }}">In Stock</th>
-                            <th class="{{ $sort === 'stock' ? 'bg-primary text-white' : '' }}">Stock</th>
-                            <th class="{{ $sort === 'created_at' ? 'bg-primary text-white' : '' }}">Created at</th>
-                            <th class="{{ $sort === 'updated_at' ? 'bg-primary text-white' : '' }}">Updated at</th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'price' ? 'bg-primary text-white' : '' }}">Price
+                            </th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'in_stock' ? 'bg-primary text-white' : '' }}">In
+                                Stock</th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'stock' ? 'bg-primary text-white' : '' }}">Stock
+                            </th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'created_at' ? 'bg-primary text-white' : '' }}">
+                                Created at</th>
+                            <th class="{{ ($_GET['sort'] ?? false) === 'updated_at' ? 'bg-primary text-white' : '' }}">
+                                Updated at</th>
                             <th>Options</th>
                         </tr>
                     </thead>
@@ -124,7 +148,6 @@
                     {{ $products->links() }}
                 </div>
             </div>
-
         </div>
     </div>
 

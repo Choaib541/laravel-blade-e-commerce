@@ -16,30 +16,29 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = new Category();
-        $sort = request()->sort ?? "id";
-        $desc = request()->desc ?? false;
-        $search = request()->search ?? "";
-        $range = request()->range ?? false;
-        $range_from = request()->range_from ?? false;
-        $range_to = request()->range_to ?? false;
-
-        $categories = $categories->search($search, [
-            "range" => $range,
-            "range_from" => $range_from,
-            "range_to" => $range_to,
+        $validated = request()->validate([
+            "search" => ["nullable"],
+            "sort" => ["nullable", "in:id,name,updated_at,in_stock"],
+            "direc" => ["nullable", "in:asc,desc"],
+            "range_option" => ["nullable", "in:created_at,deleted_at"],
+            "range_from" => ["nullable"],
+            "range_to" => ["nullable"],
         ]);
 
-        if ($desc !== false) {
-            $categories = $categories->orderBy($sort,  $desc === "true" ? "desc" : "asc");
-        } else {
-            $categories = $categories->orderBy("id", "desc");
+        $categories = new Category();
+
+        $categories = $categories->search($validated["search"] ?? "");
+
+        if (isset($validated["range_option"]) && isset($validated["range_from"]) && isset($validated["range_to"])) {
+            $categories = $categories->range($validated["range_option"], $validated["range_from"], $validated["range_to"]);
         }
+
+        $categories = $categories->sort($validated["sort"] ?? "id", $validated["direc"] ?? "desc");
 
         $categories = $categories->paginate(8);
 
         // ------------
-        return view("dashboard.categories.index", ["categories" => $categories, "sort" => $sort]);
+        return view("dashboard.categories.index", ["categories" => $categories]);
     }
 
     /**

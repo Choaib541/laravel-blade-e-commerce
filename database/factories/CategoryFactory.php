@@ -18,7 +18,7 @@ class CategoryFactory extends Factory
     {
         return [
             "name" => $this->faker->name(),
-            "image" => "assets/site_images/category.jpg"
+            "image" => "categories_images/category.jpg"
         ];
     }
 }
