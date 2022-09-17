@@ -50,6 +50,10 @@ class User extends Authenticatable
         return $this->hasOne(Role::class, "id", "role_id");
     }
 
+    public function cart_items()
+    {
+        return $this->belongsToMany(Product::class, "carts", "user_id", "product_id")->withPivot(["quantity", "price"]);
+    }
 
     public function scopeSearch($query, string $search)
     {

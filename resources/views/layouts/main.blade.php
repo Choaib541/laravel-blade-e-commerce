@@ -74,7 +74,7 @@ $nav_categories = App\Models\Category::orderBy('id', 'desc')
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
                             <a href={{ route('home') }} class="nav-item nav-link active">Home</a>
-                            <a href={{ route('products') }} class="nav-item nav-link">Shop</a>
+                            <a href={{ route('products') }} class="nav-item nav-link">Products</a>
                             {{-- <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                                 <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
@@ -94,8 +94,22 @@ $nav_categories = App\Models\Category::orderBy('id', 'desc')
                             @endauth
                             <a href={{ url('cart') }} class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle"
-                                    style="padding-bottom: 2px;">0</span>
+
+
+                                @auth
+                                    <span class="badge text-secondary border border-secondary rounded-circle"
+                                        style="padding-bottom: 2px;">
+                                        @php
+                                            echo auth()
+                                                ->user()
+                                                ->cart_items()
+                                                ->count();
+                                        @endphp
+                                    </span>
+
+                                @endauth
+
+
                             </a>
                         </div>
                     </div>

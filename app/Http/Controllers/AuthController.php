@@ -55,12 +55,12 @@ class AuthController extends Controller
 
 
         Auth::login($user);
-        return redirect(route("dashboard"))->with("success", "Welcome");
+        return back()->with("success", "Welcome");
     }
 
     public function logout(Request $request)
     {
         auth()->logout();
-        return redirect(route("login"));
+        return back(route("login"))->with("success", "Logged out successfully");
     }
 }

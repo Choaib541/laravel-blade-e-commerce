@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use App\Models\Category;
 use \Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Controller extends BaseController
 {
@@ -57,8 +58,16 @@ class Controller extends BaseController
         ]);
     }
 
-    public function products_show()
+    public function products_show($id)
     {
-        return view("public.show");
+        $product = Product::with("categories")->findOrFail($id);
+
+        $category = $product->categories->random()->name;
+
+        $products = Product::whereHas("categories", function (Builder $query) use ($category) {
+            $query->where("name", "like", "%$category%");
+        })->take(12)->get();
+
+        return view("public.show", ["product" => $product, "products" => $products]);
     }
 }

@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         Category::factory(100)->create();
         Product::factory(100)->create();
         Image::factory(10)->create();
-        Sale::factory(10)->create();
+        // Sale::factory(10)->create();
         Category_product::factory(1000)->create();
 
         \App\Models\User::create([

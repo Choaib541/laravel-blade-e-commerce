@@ -212,17 +212,17 @@
                                     <div class="product-action">
                                         <a class="btn btn-outline-dark btn-square" href=""><i
                                                 class="fa fa-shopping-cart"></i></a>
-                                        <a class="btn btn-outline-dark btn-square" href=""><i
+                                        {{-- <a class="btn btn-outline-dark btn-square" href=""><i
                                                 class="far fa-heart"></i></a>
                                         <a class="btn btn-outline-dark btn-square" href=""><i
                                                 class="fa fa-sync-alt"></i></a>
                                         <a class="btn btn-outline-dark btn-square" href=""><i
-                                                class="fa fa-search"></i></a>
+                                                class="fa fa-search"></i></a> --}}
                                     </div>
                                 </div>
                                 <div class="text-center py-4">
                                     <a class="h6 text-decoration-none text-truncate"
-                                        href="">{{ $product->title }}</a>
+                                        href={{ route('products.show', $product->id) }}>{{ $product->title }}</a>
                                     <div class="d-flex align-items-center justify-content-center mt-2">
                                         <h5>{{ $product->price }}</h5>
                                         <h6 class="text-muted ml-2"><del>$123.00</del></h6>

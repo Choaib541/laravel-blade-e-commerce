@@ -70,6 +70,18 @@ Route::middleware(["auth"])->group(function () {
             ]
         );
     });
+
+    /*_________ Cart _________*/
+    Route::resource("cart", CartController::class)->only([
+        "store",
+        "update",
+        "destroy"
+    ]);
+
+    Route::get("/cart", [CartController::class, "index"])->name("cart");
+    Route::post("/cart/checkout", [CartController::class, "checkout"])->name("cart.checkout");
+
+
     /*___________________ logout ___________________*/
     Route::post("/logout", [AuthController::class, "logout"])->name("logout");
 });
@@ -78,9 +90,6 @@ Route::get("/", [Controller::class, "index"])->name("home");
 Route::get("/contact", [Controller::class, "contact"])->name("contact");
 Route::get("/products", [Controller::class,      "products_index"])->name("products");
 Route::get("/products/{id}", [Controller::class, "products_show"])->name("products.show");
-Route::get("/cart", [CartController::class, "index"])->name("cart");
-Route::get("/cart/checkout", [CartController::class, "checkout"])->name("cart.checkout");
-
 
 Route::get("/login", [AuthController::class, "login"])->name("login");
 Route::post("/login", [AuthController::class, "auth"])->name("auth");
