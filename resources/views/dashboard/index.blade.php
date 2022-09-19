@@ -19,10 +19,10 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Earnings (Monthly)
+                                    Total Sales
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    $40,000
+                                    {{ $sales_count }}
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -40,10 +40,10 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Earnings (Annual)
+                                    Total Income
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    $215,000
+                                    $ {{ $income }}
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -114,10 +114,10 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    Pending Requests
+                                    Total Users
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    18
+                                    {{ $users_count }}
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -135,10 +135,10 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Pending Requests
+                                    Total Products
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    18
+                                    {{ $products_count }}
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -159,7 +159,7 @@
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">
-                            Earnings Overview
+                            Sales Per Month
                         </h6>
                         <div class="dropdown no-arrow">
                             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
@@ -223,7 +223,7 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">
-                    Projects
+                    Latest Orders
                 </h6>
             </div>
             <div class="card-body">
@@ -231,31 +231,25 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Position</th>
-                                <th>Office</th>
-                                <th>Age</th>
-                                <th>Start date</th>
-                                <th>Salary</th>
+                                <th>Id</th>
+                                <th>User Name</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Created at</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Name</td>
-                                <td>Position</td>
-                                <td>Office</td>
-                                <td>Age</td>
-                                <td>Start date</td>
-                                <td>Salary</td>
-                            </tr>
-                            <tr>
-                                <td>Name</td>
-                                <td>Position</td>
-                                <td>Office</td>
-                                <td>Age</td>
-                                <td>Start date</td>
-                                <td>Salary</td>
-                            </tr>
+                            @foreach ($latest_orders as $order)
+                                <tr>
+                                    <th>{{ $order->id }}</th>
+                                    <th>{{ $order->user->name }}</th>
+                                    <th>{{ $order->product->title }}</th>
+                                    <th>{{ $order->quantity }}</th>
+                                    <th>{{ $order->price }}</th>
+                                    <th>{{ $order->created_at }}</th>
+                                </tr>
+                            @endforeach
                         </tbody>
 
                     </table>
@@ -263,6 +257,8 @@
             </div>
         </div>
     </div>
+
+    {{-- users_per_month --}}
     @push('scripts')
         <!-- Page level plugins -->
         <script src={{ url('assets/dashboard/vendor/chart.js/Chart.min.js') }}></script>
@@ -271,10 +267,26 @@
             const SalesChart_myChart = new Chart(SalesChart_ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    labels: [
+                        "January",
+                        "February",
+                        "March",
+                        "April",
+                        "May",
+                        "July",
+                        "August",
+                        "September",
+                        "October",
+                        "November",
+                        "December",
+                    ],
                     datasets: [{
                         label: '# of Votes',
-                        data: [12, 19, 3, 5, 2, 3],
+                        data: [
+                            @foreach ($sales_per_month as $sale)
+                                {{ $sale['data'] }},
+                            @endforeach
+                        ],
                         backgroundColor: [
                             'rgba(75, 192, 192, 0.4)',
                         ],
@@ -297,10 +309,25 @@
             const UsersChart_myChart = new Chart(UsersChart_ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    labels: ["January",
+                        "February",
+                        "March",
+                        "April",
+                        "May",
+                        "July",
+                        "August",
+                        "September",
+                        "October",
+                        "November",
+                        "December",
+                    ],
                     datasets: [{
                         label: '# of Votes',
-                        data: [12, 19, 3, 5, 2, 3],
+                        data: [
+                            @foreach ($users_per_month as $users)
+                                {{ $users['data'] }},
+                            @endforeach
+                        ],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.4)',
                         ],
